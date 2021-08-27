@@ -1,8 +1,6 @@
 '''
 tests for deck.py
 '''
-import deck
-
 def test_52_cards():
     pass
 

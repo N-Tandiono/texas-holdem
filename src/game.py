@@ -1,5 +1,5 @@
-from deck import Deck
+from table import Table
 
 if __name__ == "__main__":
-    deck = Deck()
-    deck.PrintDeck()
+    table = Table()
+    table.PlayRound()

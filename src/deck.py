@@ -20,3 +20,5 @@ class Deck:
         for card in self.cards_in_deck:
             print(card)
     
+    def RemoveTop(self):
+        return self.cards_in_deck.pop()
