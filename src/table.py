@@ -1,48 +1,18 @@
-from deck import Deck
-from players import Players
+from player.player import Player
 
-class Table:
-    def __init__(self):
-        self.table_deck = Deck()
-        self.table_players = Players(2)
-        self.table_cards = []
+class Table():
 
-    def PlayRound(self):
-        # Deal First Card To Players
-        for player in self.table_players.players:
-            player.GiveCard(self.DrawCard())
+    _observers = []
+    _table_cards = []
 
-        # Deal Second Card To Players
-        for player in self.table_players.players:
-            player.GiveCard(self.DrawCard())
+    def attach(self, observer: Player) -> None:
+        self._observers.append(observer)
 
-        # Play Actions
+    def detach(self, observer: Player) -> None:
+        self._observers.remove(observer)
 
-        # Pre-Flop
-        # Deal 3 cards and show on table
-        for _ in range(3):
-            self.table_cards.append(self.DrawCard())
+    def notify(self) -> None:
+        for observer in self._observers:
+            observer.update(self)
+            print(observer.make_move())
 
-        # Play Actions
-
-        # Turn
-        # Deal 1 card and show on table
-        self.table_cards.append(self.DrawCard())
-
-        # Play Actions
-
-        # River
-        # Deal 1 card and show on table
-        self.table_cards.append(self.DrawCard())
-
-        # Play Actions
-
-        # Reveal
-
-        # Print Cards Everyone Has
-        for player in self.table_players.players:
-            print(player)
-        print(self.table_cards)
-
-    def DrawCard(self):
-        return self.table_deck.RemoveTop()
