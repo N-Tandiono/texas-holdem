@@ -4,9 +4,9 @@ import random
 class Deck:
     def __init__(self):
         self.cards_in_deck = []
-        self.CreateDeck()
+        self.create_deck()
 
-    def CreateDeck(self):
+    def create_deck(self) -> None:
         suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
         vals = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
         
@@ -16,9 +16,9 @@ class Deck:
 
         random.shuffle(self.cards_in_deck)
 
-    def PrintDeck(self):
+    def print_deck(self) -> None:
         for card in self.cards_in_deck:
             print(card)
     
-    def RemoveTop(self):
+    def remove_top(self) -> None:
         return self.cards_in_deck.pop()
