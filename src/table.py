@@ -2,17 +2,17 @@ from player.player import Player
 
 class Table():
 
-    _observers = []
+    _players = []
     _table_cards = []
 
     def attach(self, observer: Player) -> None:
-        self._observers.append(observer)
+        self._players.append(observer)
 
     def detach(self, observer: Player) -> None:
-        self._observers.remove(observer)
+        self._players.remove(observer)
 
     def notify(self) -> None:
-        for observer in self._observers:
+        for observer in self._players:
             observer.update(self)
-            print(observer.make_move())
+
 

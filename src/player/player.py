@@ -12,7 +12,7 @@ class Player(ABC):
         for card in table._table_cards:
             if card not in self._cards:
                 self._cards.add(card)
-       
+        
     @abstractmethod
     def make_move(self) -> str:
         pass
