@@ -5,6 +5,8 @@ class Table():
 
     _players = []
     _table_cards = []
+    _round_history = []
+    pot = 0
 
     def attach(self, observer: Player) -> None:
         self._players.append(observer)
@@ -20,7 +22,7 @@ class Table():
         self._table_cards.append(new_card)
         self.notify()
 
-    def table_same_bet(self) -> bool:
+    def table_same_bet(self, prev: int) -> bool:
         # pre-condition, there is always at least one player at the table to play (assumption)
         bet = self._players[0]._round_bet # Take bet of the first person to compare with
 
@@ -28,7 +30,7 @@ class Table():
             if player._round_bet != bet:
                 return False
 
-        if bet == None:
+        if bet == prev:
             return False
-            
+
         return True

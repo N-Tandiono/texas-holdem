@@ -4,22 +4,21 @@ from card import Card
 
 class Player(ABC):
 
-    def __init__(self):
+    def __init__(self, name: str):
+        self._name = name
         self._cards = []
-        self._history = []
-        self._round_bet = None
-        self._chips = 0
+        self._round_bet = 0
+        self._chips = 500
         self._is_valid_player = True
         self._highest_combination = str
 
     def update(self, table) -> None:
-        for card in table._table_cards:
-            if card not in self._cards:
-                self._cards.append(card)
+        # Recalculate odds and highest_combination
+        pass
     
     def give_card(self, card: Card) -> None:
         self._cards.append(card)
 
     @abstractmethod
-    def make_move(self) -> str:
+    def make_move(self, table, status) -> str:
         pass

@@ -32,24 +32,31 @@ class Game():
         # Place three cards on table for preflop
         self.generate_pre_flop()
 
+        print("FIRST ACTION")
         # Request user actions
         self.request_actions()
 
         # Place card on table for turn
         self.generate_turn()
         
+        print("SECOND ACTION")
         # Request user actions
         self.request_actions()
         
         # Place card on table for river
         self.generate_river()
 
+        print("THIRD ACTION")
         # Request user actions
         self.request_actions()
 
+        # Check if round is finished and reveal (Folded Players)
+        self.reveal()
+
     def generate_players(self) -> None:
-        for _ in range(2): # TODO: Temporarily set as 2 human players
-            self._table.attach(HumanPlayer())
+        # for _ in range(2): # TODO: Temporarily set as 2 human players
+        self._table.attach(HumanPlayer("Player 1"))
+        self._table.attach(HumanPlayer("Player 2"))
 
     def give_players_card(self) -> None:
         for player in self._table._players:
@@ -68,10 +75,38 @@ class Game():
     def request_actions(self) -> None:
         # Response of player.make_move() can either be raise or check or call or fold or all-in
         # When everyone checks in a rotation,
-        while not self._table.table_same_bet():
-            i = 0
-            if self._table._players[i]._is_valid_player: # If valid player, player can play in pot
-                action = self._table._players[i].make_move()
+
+        i = self._big_blind
+        previous_starting_bet = self._table._players[0]._round_bet # Take bet of the first person to compare with
+
+        while not self._table.table_same_bet(previous_starting_bet):
+            
+            print("================================")
+            
+            if self._table._players[i]._is_valid_player and self._table._players[i]._chips == 0:
+                print("Player is all-in")
+                # Check if all players are all-in, if yes, reveal
+
+                continue_play = False
+                for player in self._table._players:
+                    if player._is_valid_player and not self._table._players[i]._chips == 0:
+                        continue_play = True
+
+                if not continue_play:
+                    print("All Players are all-in")
+                    break
+
+
+            elif self._table._players[i]._is_valid_player and self._table._players[i]._chips > 0: # If valid player, player can play in pot
+                
+                status = None
+                if i == self._small_blind and previous_starting_bet == self._table._players[i]._round_bet:
+                    status = "small"
+
+                if i == self._big_blind and previous_starting_bet == self._table._players[i]._round_bet:
+                    status = "big"
+                
+                action = self._table._players[i].make_move(self._table, status)
                 if action == "raise":
                     # On raise, players continue until check or all-in 
                     print("Raised")
@@ -88,6 +123,7 @@ class Game():
                     # Player should be invalid from table and not eligible of winning
                     # Does not spend any more chips on that round
                     print("Folded")
+                    # Check other players, if there is only 1 left that hasn't folded, they win and round ends
                     pass
                 elif action == "all-in":
                     # Player goes all in, distribution of pot should be considered
@@ -97,10 +133,34 @@ class Game():
                     pass
                 else:
                     raise Exception
+                
             i += 1
 
             if i >= len(self._table._players):
                 i = 0
+
+        # TODO: Clean up to functions
+        self._big_blind += 1
+        if self._big_blind >= len(self._table._players):
+            self._big_blind = 0
+        while not self._table._players[self._big_blind]._is_valid_player:
+            self._big_blind += 1
+            if self._big_blind >= len(self._table._players):
+                self._big_blind = 0
+
+        self._small_blind += 1
+        if self._small_blind >= len(self._table._players):
+            self._small_blind = 0
+        while not self._table._players[self._small_blind]._is_valid_player:
+            self._small_blind += 1
+            if self._small_blind >= len(self._table._players):
+                self._small_blind = 0
+
+        print("================================")
+
+    def reveal(self):
+        print("THE REVEAL")
+        pass
 
 if __name__ == "__main__":
     game = Game()
