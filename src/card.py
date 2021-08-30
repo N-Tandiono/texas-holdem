@@ -4,4 +4,4 @@ class Card:
         self.value = value
 
     def __repr__(self):
-        return 'Card with value of ' + self.value + ' and suit of ' + self.suit
+        return self.value + " Of " + self.suit

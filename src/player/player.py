@@ -9,6 +9,7 @@ class Player(ABC):
         self._cards = []
         self._round_bet = 0
         self._chips = 500
+        self._role = ""
         self._is_valid_player = True
         self._highest_combination = str
 
@@ -20,5 +21,5 @@ class Player(ABC):
         self._cards.append(card)
 
     @abstractmethod
-    def make_move(self, table, status) -> str:
+    def make_move(self, table) -> str:
         pass

@@ -3,20 +3,24 @@ from table import Table
 
 class HumanPlayer(Player):
 
-    def make_move(self, table: Table, status: str) -> str:
+    def make_move(self, table: Table) -> str:
         print(self._name + " turn")
-        if status == "big":
-            print("You are Big Blind")
-            table.pot += 50
-            self._round_bet += 50
-            self._chips -= 50
 
-        if status == "small":
-            print("You are Small Blind")
-            table.pot += 25
-            self._round_bet += 25
-            self._chips -= 25
+        # Print Table Cards
+        print("Table: [ ", end="")
+        for i in range(len(table._table_cards) - 1):
+            print(table._table_cards[i] , end=" | ")
+        print(str(table._table_cards[len(table._table_cards) - 1]) + " ]")
 
+        # Your Cards
+        print("Cards: [ " + str(self._cards[0]) + " | " + str(self._cards[1]) + "]")
+
+        # Chips
+        print("Chips: [ ", end="")
+        for i in range(len(table._players) - 1):
+            print("(" + str(i + 1) + ") " + str(table._players[i]._role) + " " + str(table._players[i]._chips) , end=" | ")
+        print("(" + str(len(table._players)) + ") " + str(table._players[len(table._players) - 1]._role) + " " + str(table._players[len(table._players) - 1]._chips) + " ]")
+        
         print("Pot is currently at: " + str(table.pot))
         print("This action, player has contributed " + str(self._round_bet))
         print("You have " + str(self._chips) + " chips")
@@ -25,12 +29,12 @@ class HumanPlayer(Player):
         
         if move == "raise":
             print("RAISING BY: " + action[1])
-
-            table.pot += int(action[1])
-            self._round_bet += int(action[1])
-            self._chips -= int(action[1])
-
-            print("Raised")
+            contribution = 0
+            for player in table._players:
+                contribution = max(contribution, player._round_bet - self._round_bet)
+            table.pot += contribution + int(action[1])
+            self._round_bet += contribution + int(action[1])
+            self._chips -= contribution + int(action[1])
 
         elif move == "check" or move == "call":
             contribution = 0
@@ -39,13 +43,11 @@ class HumanPlayer(Player):
             table.pot += contribution
             self._round_bet += contribution
             self._chips -= contribution
-            print(str(contribution) + "to match for call")
+            print(str(contribution) + " to match for call")
         elif move == "fold":
             self._is_valid_player = False
-            print("Folded")
 
         elif move == "all-in":
-            print("All-in")
             table.pot += self._chips
             self._round_bet += self._chips
             self._chips -= self._chips

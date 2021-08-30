@@ -4,7 +4,7 @@ from player.player import Player
 class Table():
 
     _players = []
-    _table_cards = []
+    _table_cards = [] * 5
     _round_history = []
     pot = 0
 
