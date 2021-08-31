@@ -56,9 +56,11 @@ class Game():
 
     def generate_players(self) -> None:
         # for _ in range(2): # TODO: Temporarily set as 2 human players
-        self._table.attach(HumanPlayer("Player 1"))
+        self._table.attach(Bot("Player 1"))
         self._table.attach(HumanPlayer("Player 2"))
-        self._table.attach(Bot("Player 3"))
+        self._table.attach(HumanPlayer("Player 3"))
+        self._table.attach(Bot("Player 4"))
+        self._table.attach(Bot("Player 5"))
 
     def give_players_card(self) -> None:
         for player in self._table._players:
@@ -221,7 +223,7 @@ class Game():
 
     def reset_roles(self) -> None:
         for player in self._table._players:
-            player._role = " "
+            player._role = ""
         
     def reveal(self):
         print("THE REVEAL")

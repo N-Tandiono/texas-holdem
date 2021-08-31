@@ -11,10 +11,15 @@ class Player(ABC):
         self._chips = 500
         self._role = ""
         self._is_valid_player = True
-        self._highest_combination = str
+        self._highest_combination = ""
 
     def update(self, table) -> None:
+        # Called on addition of a card to the table.
+        
         # Recalculate odds and highest_combination
+        
+
+
         pass
     
     def give_card(self, card: Card) -> None:
