@@ -62,25 +62,15 @@ def has_straight_flush(cards):
     pass
 
 def has_four_kind(cards):
-    # Same Values 4 times
-    possibilities = []
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
 
-    suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
-    vals = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
-
-    for val in vals:
-        hand = []
-        for suit in suits:
-            hand.append(Card(suit, val))
-        possibilities.append(hand)
-
-    for pos in possibilities:
-        valid = True
-        for needed_card in pos:
-            if not is_card_in(needed_card, cards):
-                valid = False
-        if valid == True:
-            return True
+    if 4 in hash.values():
+        return True
     return False
 
 def has_full_house(cards):
