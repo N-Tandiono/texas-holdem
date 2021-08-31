@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from card import Card
+from compare import find_highest_combination
 
 class Player(ABC):
 
@@ -16,8 +17,13 @@ class Player(ABC):
     def update(self, table) -> None:
         # Called on addition of a card to the table.
         
+        # self._highest_combination = find_highest_combination(self._cards + table._table_cards)
         # Recalculate odds and highest_combination
-        
+
+        suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
+        vals = ['10', 'Jack', 'Queen', 'King', 'Ace']
+
+        find_highest_combination([Card("Diamonds", "10"),Card("Spades", "10"),Card("Hearts", "10"),Card("Clubs", "11"),Card("Diamonds", "Ace")])
 
 
         pass

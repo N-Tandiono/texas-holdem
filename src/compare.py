@@ -1,4 +1,7 @@
-def find_highest_combination(cards):
+from itertools import permutations
+from card import Card
+
+def find_highest_combination(cards) -> str:
     # Card Rankings:
     # 1. Royal Flush
     # 2. Straight Flush
@@ -12,35 +15,73 @@ def find_highest_combination(cards):
     # 10. High Card
 
     if has_royal_flush(cards):
-        pass
+        return "Royal Flush"
     elif has_straight_flush(cards):
-        pass
+        return "Straight Flush"
     elif has_four_kind(cards):
-        pass
+        return "Four of a Kind"
     elif has_full_house(cards):
-        pass
+        return "Full House"
     elif has_flush(cards):
-        pass
+        return "Flush"
     elif has_straight(cards):
-        pass
+        return "Straight"
     elif has_three_kind(cards):
-        pass
+        return "Three of a Kind"
     elif has_two_pair(cards):
-        pass
+        return "Two Pair"
     elif has_pair(cards):
-        pass
-    elif has_high_card(cards):
-        pass
-    pass
+        return "Pair"
+    else:
+        return "High Card"
 
 def has_royal_flush(cards):
-    pass
+    # Royal Flush have 10, J, Q, K, A
+    # Same suit
+    possibilities = []
+
+    suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
+    vals = ['10', 'Jack', 'Queen', 'King', 'Ace']
+
+    for suit in suits:
+        hand = []
+        for val in vals:
+            hand.append(Card(suit, val))
+        possibilities.append(hand)
+
+    for pos in possibilities:
+        valid = True
+        for needed_card in pos:
+            if not is_card_in(needed_card, cards):
+                valid = False
+        if valid == True:
+            return True
+    return False
 
 def has_straight_flush(cards):
     pass
 
 def has_four_kind(cards):
-    pass
+    # Same Values 4 times
+    possibilities = []
+
+    suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
+    vals = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
+
+    for val in vals:
+        hand = []
+        for suit in suits:
+            hand.append(Card(suit, val))
+        possibilities.append(hand)
+
+    for pos in possibilities:
+        valid = True
+        for needed_card in pos:
+            if not is_card_in(needed_card, cards):
+                valid = False
+        if valid == True:
+            return True
+    return False
 
 def has_full_house(cards):
     pass
@@ -60,5 +101,13 @@ def has_two_pair(cards):
 def has_pair(cards):
     pass
 
-def has_high_card(cards):
-    pass
+def is_equal(card1, card2):
+    if card1.suit == card2.suit and card1.value == card2.value:
+        return True
+    return False
+
+def is_card_in(card, array):
+    for c in array:
+        if is_equal(card, c):
+            return True
+    return False
