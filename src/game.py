@@ -30,24 +30,28 @@ class Game():
         # Give all players in the table their second card
         self.give_players_card()
         
-        # Place three cards on table for preflop
-        self.generate_pre_flop()
-
         print("FIRST ACTION")
+        # Request user actions
+        self.request_actions()
+
+        # Place three cards on table for flop
+        self.generate_flop()
+
+        print("SECOND ACTION")
         # Request user actions
         self.request_actions()
 
         # Place card on table for turn
         self.generate_turn()
         
-        print("SECOND ACTION")
+        print("THIRD ACTION")
         # Request user actions
         self.request_actions()
         
         # Place card on table for river
         self.generate_river()
 
-        print("THIRD ACTION")
+        print("FOURTH ACTION")
         # Request user actions
         self.request_actions()
 
@@ -66,7 +70,7 @@ class Game():
         for player in self._table._players:
             player.give_card(self._deck.remove_top())
 
-    def generate_pre_flop(self) -> None:
+    def generate_flop(self) -> None:
         for _ in range(3):
             self._table.add_table_cards(self._deck.remove_top())
 

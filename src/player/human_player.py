@@ -10,7 +10,10 @@ class HumanPlayer(Player):
         print("Table:    [ ", end="")
         for i in range(len(table._table_cards) - 1):
             print(table._table_cards[i] , end=" | ")
-        print(str(table._table_cards[len(table._table_cards) - 1]) + " ]")
+        if len(table._table_cards) == 0:
+            print(" ]")
+        else:
+            print(str(table._table_cards[len(table._table_cards) - 1]) + " ]")
 
         # Your Cards
         print("Cards:    [ " + str(self._cards[0]) + " | " + str(self._cards[1]) + "]")
@@ -32,7 +35,7 @@ class HumanPlayer(Player):
         
         # For Testing:
         print("Highest Combination: " + self._highest_combination)
-        
+
         action = input("What do you want to do? ").split(' ')
         move = action[0]
         
