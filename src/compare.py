@@ -59,7 +59,38 @@ def has_royal_flush(cards):
     return False
 
 def has_straight_flush(cards):
-    pass
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    for card in cards:
+        valid = True
+        for i in range(1, 5):
+            if card.value == "Ace":
+                needed_card = str(int(0) + i)
+            elif card.value in ["Jack", "Queen", "King"]:
+                needed_card = ""
+            else:
+                needed_card = str(int(card.value) + i)
+
+            if needed_card == "1":
+                needed_card = "Ace"
+            if needed_card == "11":
+                needed_card = "Jack"
+            elif needed_card == "12":
+                needed_card = "Queen"
+            elif needed_card == "13":
+                needed_card = "King"
+            elif needed_card == "14":
+                needed_card = "Ace"
+            if not is_card_in(Card(card.suit, needed_card), cards) and needed_card not in hash:
+                valid = False
+        if valid:
+            return True
+    return False
 
 def has_four_kind(cards):
     hash = {}
@@ -74,22 +105,106 @@ def has_four_kind(cards):
     return False
 
 def has_full_house(cards):
-    pass
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    if 3 in hash.values() and 2 in hash.values():
+        return True
+    return False
 
 def has_flush(cards):
-    pass
+    hash = {}
+    for card in cards:
+        if card.suit in hash:
+            hash[card.suit] += 1
+        else:
+            hash[card.suit] = 1
+
+    if 5 in hash.values():
+        return True
+    return False
 
 def has_straight(cards):
-    pass
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    for card in cards:
+        valid = True
+        for i in range(1, 5):
+            if card.value == "Ace":
+                needed_card = str(int(0) + i)
+            elif card.value in ["Jack", "Queen", "King"]:
+                needed_card = ""
+            else:
+                needed_card = str(int(card.value) + i)
+
+            if needed_card == "1":
+                needed_card = "Ace"
+            if needed_card == "11":
+                needed_card = "Jack"
+            elif needed_card == "12":
+                needed_card = "Queen"
+            elif needed_card == "13":
+                needed_card = "King"
+            elif needed_card == "14":
+                needed_card = "Ace"
+            if needed_card not in hash:
+                valid = False
+        if valid:
+            return True
+    return False
 
 def has_three_kind(cards):
-    pass
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    if 3 in hash.values():
+        return True
+    return False
 
 def has_two_pair(cards):
-    pass
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    values = list(hash.values())
+    pairs = 0
+    for val in values:
+        if val == 2:
+            pairs += 1
+
+    # If pairs >= 2, take best 2 pairs.
+    # TODO: Get top two pairs
+    if pairs >= 2:
+        return True
+    return False
 
 def has_pair(cards):
-    pass
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    if 2 in hash.values():
+        return True
+    return False
 
 def is_equal(card1, card2):
     if card1.suit == card2.suit and card1.value == card2.value:
