@@ -12,12 +12,11 @@ class Player(ABC):
         self._chips = 500
         self._role = ""
         self._is_valid_player = True
-        self._highest_combination = ""
+        self._highest_combination = find_highest_combination(self._cards)
 
     def update(self, table) -> None:
         # Called on addition of a card to the table.
         
-
         # Recalculate odds and highest_combination
         self._highest_combination = find_highest_combination(self._cards + table._table_cards)
 
@@ -25,9 +24,6 @@ class Player(ABC):
         # suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
         # vals = ['10', 'Jack', 'Queen', 'King', 'Ace']
         # self._highest_combination = find_highest_combination([Card("Diamonds", "King"),Card("Diamonds", "9"),Card("Diamonds", "Queen"),Card("Diamonds", "Jack"),Card("Diamonds", "10")])
-
-
-        pass
     
     def give_card(self, card: Card) -> None:
         self._cards.append(card)

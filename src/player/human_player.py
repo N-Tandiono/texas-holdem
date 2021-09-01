@@ -4,7 +4,7 @@ from table import Table
 class HumanPlayer(Player):
 
     def make_move(self, table: Table) -> str:
-        print(self._name + " turn")
+        print(self._name + "'s Turn")
 
         # Print Table Cards
         print("Table:    [ ", end="")
@@ -18,17 +18,17 @@ class HumanPlayer(Player):
         # Your Cards
         print("Cards:    [ " + str(self._cards[0]) + " | " + str(self._cards[1]) + "]")
 
-        # Chips
+        # Chips Owned
         print("Chips:    [ ", end="")
         for i in range(len(table._players) - 1):
             print("(" + str(i + 1) + ") " + str(table._players[i]._role) + " " + str(table._players[i]._chips) , end=" | ")
         print("(" + str(len(table._players)) + ") " + str(table._players[len(table._players) - 1]._role) + " " + str(table._players[len(table._players) - 1]._chips) + " ]")
         
-        # Chips
+        # Chips In Play
         print("In Play:  [ ", end="")
         for i in range(len(table._players) - 1):
-            print("(" + str(i + 1) + ") " + str(table._players[i]._round_bet) , end=" | ")
-        print("(" + str(len(table._players)) + ") " + str(table._players[len(table._players) - 1]._round_bet) + " ]")
+            print("(" + str(i + 1) + ") " + str(table._players[i]._role) + " " +str(table._players[i]._round_bet) , end=" | ")
+        print("(" + str(len(table._players)) + ") " + str(table._players[len(table._players) - 1]._role) + " " +str(table._players[len(table._players) - 1]._round_bet) + " ]")
 
         print("Pot is currently at: " + str(table.pot))
         print("You have " + str(self._chips) + " chips")

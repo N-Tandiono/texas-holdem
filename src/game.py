@@ -1,3 +1,4 @@
+from compare import score_combination
 from deck import Deck
 from player.bot import Bot
 from player.human_player import HumanPlayer
@@ -230,8 +231,34 @@ class Game():
             player._role = ""
         
     def reveal(self):
-        print("THE REVEAL")
-        pass
+        # Firstly get the highest combination
+        # If there is a draw, check value representation
+        player_highest_comb = []
+        highest_comb = 11
+        for player in self._table._players:
+            if score_combination(player._highest_combination) < highest_comb:
+                player_highest_comb.clear()
+                highest_comb = score_combination(player._highest_combination)
+                player_highest_comb.append(player)
+            elif score_combination(player._highest_combination) == highest_comb:
+                player_highest_comb.append(player)         
+
+        # TODO: Resolving Draws
+        # Royal Flush - Can't draw this
+        # Straight Flush - Highest range
+        # Four of a Kind - Highest Four of a Kind or Kicker determines
+        # Full House - Highest 3, then highest 2
+        # Flush - Highest Cards of Flush
+        # Straight - Highest range
+        # Three of a Kind - Highest 3
+        # Two Pair - Highest Pair, Second Pair or Kicker determines
+        # Pair - Highest Pair, Kickers determines
+        # Highest Card in order
+        print("Winners:    [ ", end="")
+        for i in range(len(player_highest_comb) - 1):
+            print("(" + str(i + 1) + ") " + str(player_highest_comb[i]._name) , end=" | ")
+        print("(" + str(len(player_highest_comb)) + ") " + str(player_highest_comb[len(player_highest_comb) - 1]._name) + " ]")
+        print("With: " + str(player_highest_comb[len(player_highest_comb) - 1]._highest_combination))
 
 if __name__ == "__main__":
     game = Game()

@@ -35,6 +35,28 @@ def find_highest_combination(cards) -> str:
     else:
         return "High Card"
 
+def score_combination(type: str) -> int:
+    if type == "Royal Flush":
+        return 1
+    if type == "Four of a Kind":
+        return 2
+    if type == "Four of a Kind":
+        return 3
+    if type == "Full House":
+        return 4
+    if type == "Flush":
+        return 5
+    if type == "Straight":
+        return 6
+    if type == "Three of a Kind":
+        return 7
+    if type == "Two Pair":
+        return 8
+    if type == "Pair":
+        return 9
+    else:
+        return 10
+
 def has_royal_flush(cards):
     # Royal Flush have 10, J, Q, K, A
     # Same suit
