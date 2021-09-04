@@ -108,7 +108,7 @@ def has_straight_flush(cards):
                 needed_card = "King"
             elif needed_card == "14":
                 needed_card = "Ace"
-            if not is_card_in(Card(card.suit, needed_card), cards) and needed_card not in hash:
+            if not is_card_in(Card(card.suit, needed_card), cards) or needed_card not in hash:
                 valid = False
         if valid:
             return True

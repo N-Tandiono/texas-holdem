@@ -23,10 +23,37 @@ class Player(ABC):
         # Debug lines below, will create black-box tests in future
         # suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
         # vals = ['10', 'Jack', 'Queen', 'King', 'Ace']
-        # self._highest_combination = find_highest_combination([Card("Diamonds", "King"),Card("Diamonds", "9"),Card("Diamonds", "Queen"),Card("Diamonds", "Jack"),Card("Diamonds", "10")])
-    
+        # self._highest_combination = find_highest_combination([Card("Diamonds", "9"),Card("Hearts", "4"),Card("Clubs", "5"),Card("Clubs", "Ace"),Card("Clubs", "2"),Card("Diamonds", "2"),Card("Diamonds", "3")])
+        # print(self._highest_combination)
+        
     def give_card(self, card: Card) -> None:
         self._cards.append(card)
+
+    def move_raise(self, amount, table):
+        print("RAISING BY: " + amount)
+        contribution = 0
+        for player in table._players:
+            contribution = max(contribution, player._round_bet - self._round_bet)
+        table.pot += contribution + int(amount)
+        self._round_bet += contribution + int(amount)
+        self._chips -= contribution + int(amount)
+    
+    def move_call(self, table):
+        contribution = 0
+        for player in table._players:
+            contribution = max(contribution, player._round_bet - self._round_bet)
+        table.pot += contribution
+        self._round_bet += contribution
+        self._chips -= contribution
+        print(str(contribution) + " to match for call")
+
+    def move_fold(self):
+        self._is_valid_player = False
+    
+    def move_all_in(self, table):
+        table.pot += self._chips
+        self._round_bet += self._chips
+        self._chips -= self._chips
 
     @abstractmethod
     def make_move(self, table) -> str:

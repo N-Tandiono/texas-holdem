@@ -40,29 +40,17 @@ class HumanPlayer(Player):
         move = action[0]
         
         if move == "raise":
-            print("RAISING BY: " + action[1])
-            contribution = 0
-            for player in table._players:
-                contribution = max(contribution, player._round_bet - self._round_bet)
-            table.pot += contribution + int(action[1])
-            self._round_bet += contribution + int(action[1])
-            self._chips -= contribution + int(action[1])
+            self.move_raise(action[1], table)
 
         elif move == "check" or move == "call":
-            contribution = 0
-            for player in table._players:
-                contribution = max(contribution, player._round_bet - self._round_bet)
-            table.pot += contribution
-            self._round_bet += contribution
-            self._chips -= contribution
-            print(str(contribution) + " to match for call")
+            self.move_call(table)
+
         elif move == "fold":
-            self._is_valid_player = False
+            self.move_fold()
 
         elif move == "all-in":
-            table.pot += self._chips
-            self._round_bet += self._chips
-            self._chips -= self._chips
+            self.move_all_in(table)
+            
         else:
             raise Exception
 
