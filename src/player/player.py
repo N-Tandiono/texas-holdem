@@ -34,18 +34,31 @@ class Player(ABC):
         contribution = 0
         for player in table._players:
             contribution = max(contribution, player._round_bet - self._round_bet)
+
+        # Check if player can afford to pay up contribution + int(amount)
+
         table.pot += contribution + int(amount)
         self._round_bet += contribution + int(amount)
         self._chips -= contribution + int(amount)
+
+        # If no, prompt all-in
     
     def move_call(self, table):
         contribution = 0
+
         for player in table._players:
             contribution = max(contribution, player._round_bet - self._round_bet)
-        table.pot += contribution
-        self._round_bet += contribution
-        self._chips -= contribution
-        print(str(contribution) + " to match for call")
+
+        # Check if player can afford to pay up contribution
+        if self._chips >= contribution:
+            table.pot += contribution
+            self._round_bet += contribution
+            self._chips -= contribution
+            print(str(contribution) + " to match for call")
+        else:
+            # If no, prompt all-in
+            self.move_all_in(table)
+        
 
     def move_fold(self):
         self._is_valid_player = False

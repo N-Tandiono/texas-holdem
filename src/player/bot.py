@@ -1,5 +1,5 @@
 from player.player import Player
-from strategy.bluff import BluffStrategy
+from strategy.bluff_strategy import BluffStrategy
 from strategy.strategy import Strategy
 from table import Table
 
@@ -18,33 +18,44 @@ class Bot(Player):
         # Look at table cards
 
         # Does it like it, confidence level
-
+        
         # How many chips does it have
 
         # Think of a strategy
         # Strategy based on confidence level and perspective
-        # Will improve over time
-
+        # Goal: Will improve over time 
+        
         # Danger cards
         # Winning cards
 
+        decided_strategy = BluffStrategy()
+
+        # Assign Strategy
         # Bluff / Slow Play / Push for Chips
+        self._strategy = decided_strategy
 
         # Based on strategy, make move
-        contribution = 0
-        for player in table._players:
-            contribution = max(contribution, player._round_bet - self._round_bet)
-        table.pot += contribution
-        self._round_bet += contribution
-        self._chips -= contribution
-        print(str(contribution) + " to match for call")
+        move = self.strategy.generate_move(table)
 
-        return self.strategy.generate_move(table)
+        # Below is repetition from Human Player, will need refactoring
+        if move == "raise":
+            self.move_raise(100, table)
+
+        elif move == "check" or move == "call":
+            self.move_call(table)
+
+        elif move == "fold":
+            self.move_fold()
+
+        elif move == "all-in":
+            self.move_all_in(table)
+            
+        else:
+            raise Exception
+
+        return move
+        
 
     @property
     def strategy(self) -> Strategy:
         return self._strategy
-
-    @strategy.setter
-    def strategy(self, strategy: Strategy) -> None:
-        self._strategy = strategy
