@@ -1,5 +1,6 @@
 from itertools import permutations
 from card import Card
+from constants import rank
 
 def find_highest_combination(cards) -> str:
     # Card Rankings:
@@ -37,23 +38,23 @@ def find_highest_combination(cards) -> str:
 
 def score_combination(type: str) -> int:
     if type == "Royal Flush":
-        return 1
+        return rank.ROYAL_FLUSH
+    if type == "Straight Flush":
+        return rank.STRAIGHT_FLUSH
     if type == "Four of a Kind":
-        return 2
-    if type == "Four of a Kind":
-        return 3
+        return rank.FOUR_OF_A_KIND
     if type == "Full House":
-        return 4
+        return rank.FULL_HOUSE
     if type == "Flush":
-        return 5
+        return rank.FLUSH
     if type == "Straight":
-        return 6
+        return rank.STRAIGHT
     if type == "Three of a Kind":
-        return 7
+        return rank.THREE_OF_A_KIND
     if type == "Two Pair":
-        return 8
+        return rank.TWO_PAIR
     if type == "Pair":
-        return 9
+        return rank.PAIR
     else:
         return 10
 

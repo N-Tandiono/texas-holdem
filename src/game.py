@@ -6,6 +6,9 @@ from player.human_player import HumanPlayer
 from player.player import Player
 from table import Table
 
+# Import constants
+from constants import rank, action
+
 class Game():
     def __init__(self):
         self._deck = Deck()
@@ -131,37 +134,31 @@ class Game():
                 if number_not_folded == 1:
                     print("All Players have folded except one")
                     break
-
-                # status = None
-                # if i == self._small_blind and previous_starting_bet == self._table._players[i]._round_bet:
-                #     status = "small"
-
-                # if i == self._big_blind and previous_starting_bet == self._table._players[i]._round_bet:
-                #     status = "big"
                 
-                action = self._table._players[i].make_move(self._table)
-                if action == "raise":
+                player_move = self._table._players[i].make_move(self._table)
+
+                if player_move in action.RAISE:
                     # On raise, players continue until check or all-in 
                     print("Raised")
                     self.lead = i - 1
                     if self.lead < 0:
                         self.lead = len(self._table._players) - 1
                     pass
-                elif action == "check":
+                elif player_move in action.CHECK:
                     # On Check, player does not choose to raise and no chips are taken
                     print("Checked")
                     pass
-                elif action == "call":
+                elif player_move in action.CALL:
                     # On Call, player matches previous bet 
                     print("Called")
                     pass
-                elif action == "fold":
+                elif player_move in action.FOLD:
                     # Player should be invalid from table and not eligible of winning
                     # Does not spend any more chips on that round
                     print("Folded")
                     # Check other players, if there is only 1 left that hasn't folded, they win and round ends
                     pass
-                elif action == "all-in":
+                elif player_move in action.ALL_IN :
                     # Player goes all in, distribution of pot should be considered
                     # If a player cannot match a raise value, they should be all-in / fold
                     # If they already all-in the previous round, they skip turn
@@ -191,7 +188,7 @@ class Game():
 
                 continue_play = False
                 for player in self._table._players:
-                    if player._is_valid_player and not player._chips == 0:
+                    if player._is_valid_player and player._chips > 0:
                         continue_play = True
 
                 if not continue_play:
@@ -256,7 +253,7 @@ class Game():
         # Two Pair - Highest Pair, Second Pair or Kicker determines
         # Pair - Highest Pair, Kickers determines
         # Highest Card in order
-        
+
         print("Winners:    [ ", end="")
         for i in range(len(player_highest_comb) - 1):
             print(str(player_highest_comb[i]._name) , end=", ")
