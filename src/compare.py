@@ -56,7 +56,7 @@ def score_combination(type: str) -> int:
     if type == "Pair":
         return rank.PAIR
     else:
-        return 10
+        return rank.HIGHEST_CARD
 
 def has_royal_flush(cards):
     # Royal Flush have 10, J, Q, K, A
