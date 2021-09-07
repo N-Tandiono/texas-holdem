@@ -23,12 +23,13 @@ class Game():
         self.generate_players()
 
         # Game continues until there is one player left at the table
-        # while len(self._table._players) > 1:
-        self.template_play_round()
+        while len(self._table._players) > 1:
+            self.template_play_round()
 
 
     def template_play_round(self) -> None:
-                
+        
+        print("=== START ROUND ===")
         # Give all players in the table their first card
         self.give_players_card()
         
@@ -59,17 +60,16 @@ class Game():
         print("FOURTH ACTION")
         # Request user actions
         self.request_actions()
-
+        
         # Check if round is finished and reveal (Folded Players)
         self.reveal()
 
+        self.reset_round()
+        print("=== END ROUND ===")
+
     def generate_players(self) -> None:
-        # for _ in range(2): # TODO: Temporarily set as 2 human players
-        self._table.attach(Bot("Player 1"))
+        self._table.attach(HumanPlayer("Player 1"))
         self._table.attach(HumanPlayer("Player 2"))
-        self._table.attach(HumanPlayer("Player 3"))
-        self._table.attach(Bot("Player 4"))
-        self._table.attach(Bot("Player 5"))
         
 
     def give_players_card(self) -> None:
@@ -95,20 +95,19 @@ class Game():
         if i >= len(self._table._players):
             i = 0
 
-        previous_starting_bet = self._table._players[0]._round_bet # Take bet of the first person to compare with
+        if self._table.round == 0:
+            # Big blind and small blind contributions
+            self._table.pot += 50
+            self._table._players[self._big_blind]._round_bet += 50
+            self._table._players[self._big_blind]._chips -= 50
 
-        # Big blind and small blind contributions
-        self._table.pot += 50
-        self._table._players[self._big_blind]._round_bet += 50
-        self._table._players[self._big_blind]._chips -= 50
+            self._table.pot += 25
+            self._table._players[self._small_blind]._round_bet += 25
+            self._table._players[self._small_blind]._chips -= 25
 
-        self._table.pot += 25
-        self._table._players[self._small_blind]._round_bet += 25
-        self._table._players[self._small_blind]._chips -= 25
-
-        # Assign roles to new players
-        self._table._players[self._big_blind]._role = "BB"
-        self._table._players[self._small_blind]._role = "SB"
+            # Assign roles to new players
+            self._table._players[self._big_blind]._role = "BB"
+            self._table._players[self._small_blind]._role = "SB"
 
         self.lead = i - 1
         if self.lead < 0:
@@ -196,7 +195,7 @@ class Game():
                     print("All Players are all-in")
                     break
             
-            if i == self.lead and self._table.table_same_bet(previous_starting_bet):
+            if i == self.lead:
                 # Leave and reset
                 break
 
@@ -204,24 +203,8 @@ class Game():
             if i >=  len(self._table._players):
                 i = 0
 
-        self.reset_roles()
-
-        # TODO: Clean up to functions
-        self._big_blind += 1
-        if self._big_blind >= len(self._table._players):
-            self._big_blind = 0
-        while not self._table._players[self._big_blind]._is_valid_player:
-            self._big_blind += 1
-            if self._big_blind >= len(self._table._players):
-                self._big_blind = 0
-
-        self._small_blind += 1
-        if self._small_blind >= len(self._table._players):
-            self._small_blind = 0
-        while not self._table._players[self._small_blind]._is_valid_player:
-            self._small_blind += 1
-            if self._small_blind >= len(self._table._players):
-                self._small_blind = 0
+        # Increment table round for no extra pay from BB or SB
+        self._table.round += 1
 
         print("================================")
 
@@ -272,6 +255,30 @@ class Game():
             if i in results:
                 player_highest_comb = results[i]
         
+        # Give money for reward winning
+        # From pot, give to winner, divided amongst everyone
+        # TODO: Fix up and find out a more accurate measurement especially for all-ins
+        for player in player_highest_comb:
+            player._chips += (self._table.pot // len(player_highest_comb))
+
+        # Chips Owned
+        print("Chips:    [ ", end="")
+        for k in range(len(self._table._players) - 1):
+            print("(" + str(k + 1) + ") " + str(self._table._players[k]._role) + " " + str(self._table._players[k]._chips) , end=" | ")
+        print("(" + str(len(self._table._players)) + ") " + str(self._table._players[len(self._table._players) - 1]._role) + " " + str(self._table._players[len(self._table._players) - 1]._chips) + " ]")
+
+        # Chips In Play
+        print("In Play:  [ ", end="")
+        for j in range(len(self._table._players) - 1):
+            print("(" + str(j + 1) + ") " + str(self._table._players[j]._role) + " " +str(self._table._players[j]._round_bet) , end=" | ")
+        print("(" + str(len(self._table._players)) + ") " + str(self._table._players[len(self._table._players) - 1]._role) + " " +str(self._table._players[len(self._table._players) - 1]._round_bet) + " ]")
+
+        print("Winners:    [ ", end="")
+        for i in range(len(player_highest_comb) - 1):
+            print(str(player_highest_comb[i]._name) , end=", ")
+        print(str(player_highest_comb[len(player_highest_comb) - 1]._name) + " ]")
+        print("Combination: " + str(player_highest_comb[len(player_highest_comb) - 1]._highest_combination))
+
         # If player all-ins and loses, they should be dettached from table as they are no longer playing
         to_remove = []
         for player in self._table._players:
@@ -280,12 +287,35 @@ class Game():
         for player in to_remove:
             print("Removing " + player._name + " from table.")
             self._table.detach(player)
+        
+    def reset_round(self):
+        for player in self._table._players:
+            player._cards = []
+            player._round_bet = 0
+            player._is_valid_player = True
+            player._highest_combination = "High Card"
 
-        print("Winners:    [ ", end="")
-        for i in range(len(player_highest_comb) - 1):
-            print(str(player_highest_comb[i]._name) , end=", ")
-        print(str(player_highest_comb[len(player_highest_comb) - 1]._name) + " ]")
-        print("With: " + str(player_highest_comb[len(player_highest_comb) - 1]._highest_combination))
+        self._table._table_cards = [] * 5
+        self._table.pot = 0
+        self._table.round = 0
+        self.reset_roles()
+
+        # TODO: Clean up to functions
+        self._big_blind += 1
+        if self._big_blind >= len(self._table._players):
+            self._big_blind = 0
+        while not self._table._players[self._big_blind]._is_valid_player:
+            self._big_blind += 1
+            if self._big_blind >= len(self._table._players):
+                self._big_blind = 0
+
+        self._small_blind += 1
+        if self._small_blind >= len(self._table._players):
+            self._small_blind = 0
+        while not self._table._players[self._small_blind]._is_valid_player:
+            self._small_blind += 1
+            if self._small_blind >= len(self._table._players):
+                self._small_blind = 0
 
 if __name__ == "__main__":
     game = Game()

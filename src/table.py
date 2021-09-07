@@ -5,8 +5,8 @@ class Table():
 
     _players = []
     _table_cards = [] * 5
-    _round_history = []
     pot = 0
+    round = 0
 
     def attach(self, observer: Player) -> None:
         self._players.append(observer)
