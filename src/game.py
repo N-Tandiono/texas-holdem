@@ -1,5 +1,5 @@
 from card import Card
-from compare import is_card_in, score_combination
+from compare import convert_from_score, is_card_in, score_combination
 from deck import Deck
 from player.bot import Bot
 from player.human_player import HumanPlayer
@@ -232,15 +232,15 @@ class Game():
         # Firstly get the highest combination
         # If there is a draw, check value representation
         player_highest_comb = []
-        highest_comb = 11
-        for player in self._table._players:
-            if player._is_valid_player:
-                if score_combination(player._highest_combination) < highest_comb:
-                    player_highest_comb.clear()
-                    highest_comb = score_combination(player._highest_combination)
-                    player_highest_comb.append(player)
-                elif score_combination(player._highest_combination) == highest_comb:
-                    player_highest_comb.append(player)
+        # highest_comb = 11
+        # for player in self._table._players:
+        #     if player._is_valid_player:
+        #         if score_combination(player._highest_combination) < highest_comb:
+        #             player_highest_comb.clear()
+        #             highest_comb = score_combination(player._highest_combination)
+        #             player_highest_comb.append(player)
+        #         elif score_combination(player._highest_combination) == highest_comb:
+        #             player_highest_comb.append(player)
 
         # Resolving Draws
         # Royal Flush - Can't draw this
@@ -253,6 +253,24 @@ class Game():
         # Two Pair - Highest Pair, Second Pair or Kicker determines
         # Pair - Highest Pair, Kickers determines
         # Highest Card in order
+
+        # Sort distribution of pot
+        # Sort all-ins, if winner but does not get entire pot
+
+        # Second highest winner
+        # What if second highest is also all-in who does not get entire pot
+
+        results = {}
+        for player in self._table._players:
+            if player._is_valid_player:
+                if score_combination(player._highest_combination) not in results:
+                    results[score_combination(player._highest_combination)] = []
+                results[score_combination(player._highest_combination)].append(player)
+
+        for i in range(10, 0, -1):
+            if i in results:
+                player_highest_comb = results[i]
+       
 
         print("Winners:    [ ", end="")
         for i in range(len(player_highest_comb) - 1):

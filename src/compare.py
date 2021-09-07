@@ -58,6 +58,28 @@ def score_combination(type: str) -> int:
     else:
         return rank.HIGHEST_CARD
 
+def convert_from_score(type: int) -> str:
+    if type == rank.ROYAL_FLUSH:
+        return "Royal Flush"
+    if type == rank.STRAIGHT_FLUSH:
+        return "Straight Flush"
+    if type == rank.FOUR_OF_A_KIND:
+        return "Four of a Kind"
+    if type == rank.FULL_HOUSE:
+        return "Full House"
+    if type == rank.FLUSH:
+        return "Flush"
+    if type == rank.STRAIGHT:
+        return "Straight"
+    if type == rank.THREE_OF_A_KIND:
+        return "Three of a Kind"
+    if type == rank.TWO_PAIR:
+        return "Two Pair"
+    if type == rank.PAIR:
+        return "Pair"
+    else:
+        return "High Card"
+
 def has_royal_flush(cards):
     # Royal Flush have 10, J, Q, K, A
     # Same suit
