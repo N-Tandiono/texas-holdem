@@ -70,6 +70,7 @@ class Game():
         self._table.attach(HumanPlayer("Player 3"))
         self._table.attach(Bot("Player 4"))
         self._table.attach(Bot("Player 5"))
+        
 
     def give_players_card(self) -> None:
         for player in self._table._players:
@@ -270,7 +271,15 @@ class Game():
         for i in range(10, 0, -1):
             if i in results:
                 player_highest_comb = results[i]
-       
+        
+        # If player all-ins and loses, they should be dettached from table as they are no longer playing
+        to_remove = []
+        for player in self._table._players:
+            if player._chips <= 0:
+                to_remove.append(player)
+        for player in to_remove:
+            print("Removing " + player._name + " from table.")
+            self._table.detach(player)
 
         print("Winners:    [ ", end="")
         for i in range(len(player_highest_comb) - 1):
