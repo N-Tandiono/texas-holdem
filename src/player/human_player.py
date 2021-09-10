@@ -1,5 +1,6 @@
 from player.player import Player
 from table import Table
+from constants import action
 
 class HumanPlayer(Player):
 
@@ -36,19 +37,19 @@ class HumanPlayer(Player):
         # For Testing:
         print("Highest Combination: " + self._highest_combination)
 
-        action = input("What do you want to do? ").split(' ')
-        move = action[0]
+        choice = input("What do you want to do? ").split(' ')
+        move = choice[0]
         
-        if move == "raise":
-            self.move_raise(action[1], table)
+        if move in action.RAISE:
+            self.move_raise(choice[1], table)
 
-        elif move == "check" or move == "call":
+        elif move in action.CHECK or move in action.CALL:
             self.move_call(table)
 
-        elif move == "fold":
+        elif move in action.FOLD:
             self.move_fold()
 
-        elif move == "all-in":
+        elif move in action.ALL_IN:
             self.move_all_in(table)
             
         else:

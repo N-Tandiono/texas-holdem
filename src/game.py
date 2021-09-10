@@ -26,6 +26,7 @@ class Game():
         while len(self._table._players) > 1:
             self.template_play_round()
 
+        print(self._table._players[0]._name + " was the last person on the table.")
 
     def template_play_round(self) -> None:
         
@@ -251,15 +252,30 @@ class Game():
                     results[score_combination(player._highest_combination)] = []
                 results[score_combination(player._highest_combination)].append(player)
 
-        for i in range(10, 0, -1):
+        for i in range(1, 11):
             if i in results:
                 player_highest_comb = results[i]
-        
+
+            for player in player_highest_comb:
+                player._chips += player._round_bet
+                self._table.pot -= player._round_bet
+
+                for table_player in self._table._players:
+                    if table_player not in player_highest_comb:
+                        player._chips += min(player._round_bet, table_player._round_bet // len(player_highest_comb))
+                        self._table.pot -= min(player._round_bet, table_player._round_bet // len(player_highest_comb))
+                        table_player._round_bet -= min(player._round_bet, table_player._round_bet // len(player_highest_comb))
+
+                player._round_bet = 0
+
+            if self._table.pot == 0:
+                print("Pot now Empty")
+                break
+                        
         # Give money for reward winning
         # From pot, give to winner, divided amongst everyone
         # TODO: Fix up and find out a more accurate measurement especially for all-ins
-        for player in player_highest_comb:
-            player._chips += (self._table.pot // len(player_highest_comb))
+        
 
         # Chips Owned
         print("Chips:    [ ", end="")
@@ -288,6 +304,9 @@ class Game():
             print("Removing " + player._name + " from table.")
             self._table.detach(player)
         
+        # Reset Round
+        self.reset_round()
+
     def reset_round(self):
         for player in self._table._players:
             player._cards = []

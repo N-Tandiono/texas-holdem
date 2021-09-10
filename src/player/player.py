@@ -30,19 +30,18 @@ class Player(ABC):
         self._cards.append(card)
 
     def move_raise(self, amount, table):
-        print("RAISING BY: " + amount)
+        print("Raising by: " + amount)
         contribution = 0
         for player in table._players:
             contribution = max(contribution, player._round_bet - self._round_bet)
 
         # Check if player can afford to pay up contribution + int(amount)
+        # Cannot raise over the number of chips player has
+        table.pot += min(contribution + int(amount), self._chips)
+        self._round_bet += min(contribution + int(amount), self._chips)
+        self._chips -= min(contribution + int(amount), self._chips)
 
-        table.pot += contribution + int(amount)
-        self._round_bet += contribution + int(amount)
-        self._chips -= contribution + int(amount)
-
-        # If no, prompt all-in
-    
+        
     def move_call(self, table):
         contribution = 0
 
