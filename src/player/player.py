@@ -5,11 +5,11 @@ from compare import find_highest_combination
 
 class Player(ABC):
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, starting_chips: int):
         self._name = name
         self._cards = []
         self._round_bet = 0
-        self._chips = 500
+        self._chips = starting_chips
         self._role = ""
         self._is_valid_player = True
         self._highest_combination = find_highest_combination(self._cards)

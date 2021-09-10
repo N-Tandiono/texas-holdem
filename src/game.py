@@ -69,8 +69,8 @@ class Game():
         print("=== END ROUND ===")
 
     def generate_players(self) -> None:
-        self._table.attach(HumanPlayer("Player 1"))
-        self._table.attach(HumanPlayer("Player 2"))
+        self._table.attach(HumanPlayer("Player 1", 1000))
+        self._table.attach(HumanPlayer("Player 2", 500))
         
 
     def give_players_card(self) -> None:
@@ -305,7 +305,7 @@ class Game():
             self._table.detach(player)
         
         # Reset Round
-        self.reset_round()
+        results = {}
 
     def reset_round(self):
         for player in self._table._players:
@@ -314,6 +314,7 @@ class Game():
             player._is_valid_player = True
             player._highest_combination = "High Card"
 
+        self._deck = Deck()
         self._table._table_cards = [] * 5
         self._table.pot = 0
         self._table.round = 0
@@ -327,7 +328,7 @@ class Game():
             self._big_blind += 1
             if self._big_blind >= len(self._table._players):
                 self._big_blind = 0
-
+                
         self._small_blind += 1
         if self._small_blind >= len(self._table._players):
             self._small_blind = 0
