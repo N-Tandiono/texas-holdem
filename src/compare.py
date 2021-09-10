@@ -16,25 +16,25 @@ def find_highest_combination(cards) -> str:
     # 10. High Card
 
     if has_royal_flush(cards):
-        return "Royal Flush"
+        return value_royal_flush(cards), "Royal Flush"
     elif has_straight_flush(cards):
-        return "Straight Flush"
+        return value_straight_flush(cards), "Straight Flush"
     elif has_four_kind(cards):
-        return "Four of a Kind"
+        return value_four_kind(cards), "Four of a Kind"
     elif has_full_house(cards):
-        return "Full House"
+        return value_full_house(cards), "Full House"
     elif has_flush(cards):
-        return "Flush"
+        return value_flush(cards), "Flush"
     elif has_straight(cards):
-        return "Straight"
+        return value_straight(cards), "Straight"
     elif has_three_kind(cards):
-        return "Three of a Kind"
+        return value_three_kind(cards), "Three of a Kind"
     elif has_two_pair(cards):
-        return "Two Pair"
+        return value_two_pair(cards), "Two Pair"
     elif has_pair(cards):
-        return "Pair"
+        return value_pair(cards), "Pair"
     else:
-        return "High Card"
+        return value_high_card(cards, []), "High Card"
 
 def score_combination(type: str) -> int:
     if type == "Royal Flush":
@@ -103,6 +103,10 @@ def has_royal_flush(cards):
             return True
     return False
 
+def value_royal_flush(cards):
+    # Guaranteed win
+    return "0"
+
 def has_straight_flush(cards):
     hash = {}
     for card in cards:
@@ -137,6 +141,41 @@ def has_straight_flush(cards):
             return True
     return False
 
+def value_straight_flush(cards):
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    value = ""
+    for card in cards:
+        valid = True
+        for i in range(1, 5):
+            if card.value == "Ace":
+                needed_card = str(int(0) + i)
+            elif card.value in ["Jack", "Queen", "King"]:
+                needed_card = ""
+            else:
+                needed_card = str(int(card.value) + i)
+
+            if needed_card == "1":
+                needed_card = "Ace"
+            if needed_card == "11":
+                needed_card = "Jack"
+            elif needed_card == "12":
+                needed_card = "Queen"
+            elif needed_card == "13":
+                needed_card = "King"
+            elif needed_card == "14":
+                needed_card = "Ace"
+            if not is_card_in(Card(card.suit, needed_card), cards) or needed_card not in hash:
+                valid = False
+        if valid:
+            value = card.suit
+    return value
+
 def has_four_kind(cards):
     hash = {}
     for card in cards:
@@ -148,6 +187,45 @@ def has_four_kind(cards):
     if 4 in hash.values():
         return True
     return False
+
+def value_four_kind(cards):
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+    
+    # TODO: Clean this up
+    four_card = [k for k, v in hash.items() if v == 4]
+    highest = "2"
+    for card in four_card:
+        int_card = card
+        if card == "Jack":
+            int_card = 11
+        elif card == "Queen":
+            int_card = 12
+        elif card == "King":
+            int_card = 13
+        elif card == "Ace":
+            int_card = 14
+        else:
+            int_card = int(card)
+        if int_card >= int(highest):
+            highest = int_card
+
+    if highest == 11:
+        highest = "Jack"
+    elif highest == 12:
+        highest = "Queen"
+    elif highest == 13:
+        highest = "King"
+    elif highest == 14:
+        highest = "Ace"
+    else:
+        highest = str(highest)
+
+    return highest
 
 def has_full_house(cards):
     hash = {}
@@ -161,6 +239,73 @@ def has_full_house(cards):
         return True
     return False
 
+def value_full_house(cards):
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    three_cards = [k for k, v in hash.items() if v == 3]
+    three_highest = "2"
+    for card in three_cards:
+        int_card = card
+        if card == "Jack":
+            int_card == 11
+        elif card == "Queen":
+            int_card == 12
+        elif card == "King":
+            int_card == 13
+        elif card == "Ace":
+            int_card == 14
+        else:
+            int_card = int(card)
+        if int_card >= int(three_highest):
+            three_highest = int_card
+
+    if three_highest == 11:
+        three_highest == "Jack"
+    elif three_highest == 12:
+        three_highest == "Queen"
+    elif three_highest == 13:
+        three_highest == "King"
+    elif three_highest == 14:
+        three_highest == "Ace"
+    else:
+        three_highest = str(three_highest)
+    
+    two_cards = [k for k, v in hash.items() if v == 2]
+    two_highest = "2"
+    for card in two_cards:
+        int_card = card
+        if card == "Jack":
+            int_card == 11
+        elif card == "Queen":
+            int_card == 12
+        elif card == "King":
+            int_card == 13
+        elif card == "Ace":
+            int_card == 14
+        else:
+            int_card = int(card)
+        if int_card >= int(two_highest):
+            two_highest = int_card
+
+    if two_highest == 11:
+        two_highest == "Jack"
+    elif two_highest == 12:
+        two_highest == "Queen"
+    elif two_highest == 13:
+        two_highest == "King"
+    elif two_highest == 14:
+        two_highest == "Ace"
+    else:
+        two_highest = str(two_highest)
+
+    ret = str(three_highest) + " " + str(two_highest)
+    return ret
+
 def has_flush(cards):
     hash = {}
     for card in cards:
@@ -172,6 +317,44 @@ def has_flush(cards):
     if 5 in hash.values():
         return True
     return False
+
+def value_flush(cards):
+    hash = {}
+    for card in cards:
+        if card.suit in hash:
+            hash[card.suit] += 1
+        else:
+            hash[card.suit] = 1
+
+    suit = [k for k, v in hash.items() if v == 5]
+    
+    highest = "2"
+    
+    for card in cards:
+        if card.value == "Jack":
+            int_card == 11
+        elif card.value == "Queen":
+            int_card == 12
+        elif card.value == "King":
+            int_card == 13
+        elif card.value == "Ace":
+            int_card == 14
+        else:
+            int_card = int(card.value)
+        if card.suit == suit[0] and int_card >= int(highest):
+            highest = int_card
+
+    if highest == 11:
+        highest == "Jack"
+    elif highest == 12:
+        highest == "Queen"
+    elif highest == 13:
+        highest == "King"
+    elif highest == 14:
+        highest == "Ace"
+    else:
+        highest = str(highest)
+    return highest
 
 def has_straight(cards):
     hash = {}
@@ -207,6 +390,41 @@ def has_straight(cards):
             return True
     return False
 
+def value_straight(cards):
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+
+    value = ""
+    for card in cards:
+        valid = True
+        for i in range(1, 5):
+            if card.value == "Ace":
+                needed_card = str(int(0) + i)
+            elif card.value in ["Jack", "Queen", "King"]:
+                needed_card = ""
+            else:
+                needed_card = str(int(card.value) + i)
+
+            if needed_card == "1":
+                needed_card = "Ace"
+            if needed_card == "11":
+                needed_card = "Jack"
+            elif needed_card == "12":
+                needed_card = "Queen"
+            elif needed_card == "13":
+                needed_card = "King"
+            elif needed_card == "14":
+                needed_card = "Ace"
+            if needed_card not in hash:
+                valid = False
+        if valid:
+            value = card.value
+    return value
+
 def has_three_kind(cards):
     hash = {}
     for card in cards:
@@ -218,6 +436,45 @@ def has_three_kind(cards):
     if 3 in hash.values():
         return True
     return False
+
+def value_three_kind(cards):
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+    
+    # TODO: Clean this up
+    four_card = [k for k, v in hash.items() if v == 3]
+    highest = "2"
+    for card in four_card:
+        int_card = card
+        if card == "Jack":
+            int_card = 11
+        elif card == "Queen":
+            int_card = 12
+        elif card == "King":
+            int_card = 13
+        elif card == "Ace":
+            int_card = 14
+        else:
+            int_card = int(card)
+        if int_card >= int(highest):
+            highest = int_card
+
+    if highest == 11:
+        highest = "Jack"
+    elif highest == 12:
+        highest = "Queen"
+    elif highest == 13:
+        highest = "King"
+    elif highest == 14:
+        highest = "Ace"
+    else:
+        highest = str(highest)
+
+    return highest
 
 def has_two_pair(cards):
     hash = {}
@@ -239,6 +496,84 @@ def has_two_pair(cards):
         return True
     return False
 
+def value_two_pair(cards):
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+    
+    picked = []
+
+    # TODO: Clean this up
+    pair_card = [k for k, v in hash.items() if v == 2]
+    highest = "2"
+    for card in pair_card:
+        int_card = card
+        if card == "Jack":
+            int_card = 11
+        elif card == "Queen":
+            int_card = 12
+        elif card == "King":
+            int_card = 13
+        elif card == "Ace":
+            int_card = 14
+        else:
+            int_card = int(card)
+        if int_card >= int(highest) and card not in picked:
+            highest = int_card
+
+    if highest == 11:
+        highest = "Jack"
+    elif highest == 12:
+        highest = "Queen"
+    elif highest == 13:
+        highest = "King"
+    elif highest == 14:
+        highest = "Ace"
+    else:
+        highest = str(highest)
+
+    picked.append(highest)
+
+    # Second, messy implementation
+    # TODO: CLEANUP
+    highest = "2"
+    for card in pair_card:
+        int_card = card
+        if card == "Jack":
+            int_card = 11
+        elif card == "Queen":
+            int_card = 12
+        elif card == "King":
+            int_card = 13
+        elif card == "Ace":
+            int_card = 14
+        else:
+            int_card = int(card)
+        if int_card >= int(highest) and card not in picked:
+            highest = int_card
+
+    if highest == 11:
+        highest = "Jack"
+    elif highest == 12:
+        highest = "Queen"
+    elif highest == 13:
+        highest = "King"
+    elif highest == 14:
+        highest = "Ace"
+    else:
+        highest = str(highest)
+
+    picked.append(highest)
+
+    third = value_high_card(cards, picked)
+
+    ret = str(picked[0]) + " " + str(picked[1] + " " + third)
+    
+    return ret
+
 def has_pair(cards):
     hash = {}
     for card in cards:
@@ -250,6 +585,75 @@ def has_pair(cards):
     if 2 in hash.values():
         return True
     return False
+
+def value_pair(cards):
+    hash = {}
+    for card in cards:
+        if card.value in hash:
+            hash[card.value] += 1
+        else:
+            hash[card.value] = 1
+    
+    # TODO: Clean this up
+    pair_card = [k for k, v in hash.items() if v == 2]
+    highest = "2"
+    for card in pair_card:
+        int_card = card
+        if card == "Jack":
+            int_card = 11
+        elif card == "Queen":
+            int_card = 12
+        elif card == "King":
+            int_card = 13
+        elif card == "Ace":
+            int_card = 14
+        else:
+            int_card = int(card)
+        if int_card >= int(highest):
+            highest = int_card
+
+    if highest == 11:
+        highest = "Jack"
+    elif highest == 12:
+        highest = "Queen"
+    elif highest == 13:
+        highest = "King"
+    elif highest == 14:
+        highest = "Ace"
+    else:
+        highest = str(highest)
+
+    return highest
+
+def value_high_card(cards, picked):
+    highest = "2"
+    
+    for card in cards:
+        int_card = 0
+        if card.value == "Jack":
+            int_card = 11
+        elif card.value == "Queen":
+            int_card = 12
+        elif card.value == "King":
+            int_card = 13
+        elif card.value == "Ace":
+            int_card = 14
+        else:
+            int_card = int(card.value)
+        if int_card >= int(highest) and card.value not in picked:
+            highest = int_card
+
+    if highest == 11:
+        highest = "Jack"
+    elif highest == 12:
+        highest = "Queen"
+    elif highest == 13:
+        highest = "King"
+    elif highest == 14:
+        highest = "Ace"
+    else:
+        highest = str(highest)
+    return highest
 
 def is_equal(card1, card2):
     if card1.suit == card2.suit and card1.value == card2.value:

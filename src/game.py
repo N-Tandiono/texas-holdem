@@ -217,15 +217,6 @@ class Game():
         # Firstly get the highest combination
         # If there is a draw, check value representation
         player_highest_comb = []
-        # highest_comb = 11
-        # for player in self._table._players:
-        #     if player._is_valid_player:
-        #         if score_combination(player._highest_combination) < highest_comb:
-        #             player_highest_comb.clear()
-        #             highest_comb = score_combination(player._highest_combination)
-        #             player_highest_comb.append(player)
-        #         elif score_combination(player._highest_combination) == highest_comb:
-        #             player_highest_comb.append(player)
 
         # Resolving Draws
         # Royal Flush - Can't draw this
@@ -255,6 +246,9 @@ class Game():
         for i in range(1, 11):
             if i in results:
                 player_highest_comb = results[i]
+
+                # Resolve Draws Here
+                
 
             for player in player_highest_comb:
                 player._chips += player._round_bet
@@ -328,7 +322,7 @@ class Game():
             self._big_blind += 1
             if self._big_blind >= len(self._table._players):
                 self._big_blind = 0
-                
+
         self._small_blind += 1
         if self._small_blind >= len(self._table._players):
             self._small_blind = 0
