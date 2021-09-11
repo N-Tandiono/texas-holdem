@@ -119,7 +119,7 @@ def has_straight_flush(cards):
         valid = True
         for i in range(1, 5):
             if card.value == "Ace":
-                needed_card = str(int(0) + i)
+                needed_card = str(int(1) + i)
             elif card.value in ["Jack", "Queen", "King"]:
                 needed_card = ""
             else:
@@ -154,7 +154,7 @@ def value_straight_flush(cards):
         valid = True
         for i in range(1, 5):
             if card.value == "Ace":
-                needed_card = str(int(0) + i)
+                needed_card = str(int(1) + i)
             elif card.value in ["Jack", "Queen", "King"]:
                 needed_card = ""
             else:
@@ -252,26 +252,26 @@ def value_full_house(cards):
     for card in three_cards:
         int_card = card
         if card == "Jack":
-            int_card == 11
+            int_card = 11
         elif card == "Queen":
-            int_card == 12
+            int_card = 12
         elif card == "King":
-            int_card == 13
+            int_card = 13
         elif card == "Ace":
-            int_card == 14
+            int_card = 14
         else:
             int_card = int(card)
         if int_card >= int(three_highest):
             three_highest = int_card
 
     if three_highest == 11:
-        three_highest == "Jack"
+        three_highest = "Jack"
     elif three_highest == 12:
-        three_highest == "Queen"
+        three_highest = "Queen"
     elif three_highest == 13:
-        three_highest == "King"
+        three_highest = "King"
     elif three_highest == 14:
-        three_highest == "Ace"
+        three_highest = "Ace"
     else:
         three_highest = str(three_highest)
     
@@ -280,26 +280,26 @@ def value_full_house(cards):
     for card in two_cards:
         int_card = card
         if card == "Jack":
-            int_card == 11
+            int_card = 11
         elif card == "Queen":
-            int_card == 12
+            int_card = 12
         elif card == "King":
-            int_card == 13
+            int_card = 13
         elif card == "Ace":
-            int_card == 14
+            int_card = 14
         else:
             int_card = int(card)
         if int_card >= int(two_highest):
             two_highest = int_card
 
     if two_highest == 11:
-        two_highest == "Jack"
+        two_highest = "Jack"
     elif two_highest == 12:
-        two_highest == "Queen"
+        two_highest = "Queen"
     elif two_highest == 13:
-        two_highest == "King"
+        two_highest = "King"
     elif two_highest == 14:
-        two_highest == "Ace"
+        two_highest = "Ace"
     else:
         two_highest = str(two_highest)
 
@@ -368,7 +368,7 @@ def has_straight(cards):
         valid = True
         for i in range(1, 5):
             if card.value == "Ace":
-                needed_card = str(int(0) + i)
+                needed_card = str(int(1) + i)
             elif card.value in ["Jack", "Queen", "King"]:
                 needed_card = ""
             else:
@@ -403,7 +403,7 @@ def value_straight(cards):
         valid = True
         for i in range(1, 5):
             if card.value == "Ace":
-                needed_card = str(int(0) + i)
+                needed_card = str(int(1) + i)
             elif card.value in ["Jack", "Queen", "King"]:
                 needed_card = ""
             else:

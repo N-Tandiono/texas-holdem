@@ -36,7 +36,7 @@ class HumanPlayer(Player):
         
         # For Testing:
         print("Highest Combination: " + self._highest_combination)
-        print("Highest Combination: " + self.value)
+        print("Draw Key Value: " + self.value)
 
         choice = input("What do you want to do? ").split(' ')
         move = choice[0]

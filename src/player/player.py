@@ -21,17 +21,16 @@ class Player(ABC):
         # Called on addition of a card to the table.
         # Recalculate odds and highest_combination
         value, combination = find_highest_combination(self._cards + table._table_cards)
+        
+        self._highest_combination = combination
+        self.value = value
+
+    def give_card(self, card: Card) -> None:
+        self._cards.append(card)
+        value, combination = find_highest_combination(self._cards)
 
         self._highest_combination = combination
         self.value = value
-        # Debug lines below, will create black-box tests in future
-        # suits = ['Spades', 'Diamonds', 'Hearts', 'Clubs']
-        # vals = ['10', 'Jack', 'Queen', 'King', 'Ace']
-        # self._highest_combination = find_highest_combination([Card("Diamonds", "9"),Card("Hearts", "4"),Card("Clubs", "5"),Card("Clubs", "Ace"),Card("Clubs", "2"),Card("Diamonds", "2"),Card("Diamonds", "3")])
-        # print(self._highest_combination)
-        
-    def give_card(self, card: Card) -> None:
-        self._cards.append(card)
 
     def move_raise(self, amount, table):
         print("Raising by: " + amount)
