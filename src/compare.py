@@ -36,6 +36,69 @@ def find_highest_combination(cards) -> str:
     else:
         return value_high_card(cards, []), "High Card"
 
+def resolve_draw(players, type):
+
+    scores = {}
+    for player in players:
+        first = player.value.split(" ")[0]
+        if first in scores:
+            scores[first].append(player)
+        else:
+            scores[first] = [player]
+
+    if type == "Royal Flush":
+        return players
+    if type == "Straight Flush":
+        return get_highest_score(scores, True)
+    if type == "Four of a Kind":
+        return get_highest_score(scores, False)
+    if type == "Full House":
+        return get_highest_score(scores, False)
+    if type == "Flush":
+        return get_highest_score(scores, False)
+    if type == "Straight":
+        return get_highest_score(scores, True)
+    if type == "Three of a Kind":
+        return get_highest_score(scores, False)
+    if type == "Two Pair":
+        return get_highest_score(scores, False)
+    if type == "Pair":
+        return get_highest_score(scores, False)
+    else:
+        return get_highest_score(scores, False)
+
+def get_highest_score(dict, is_straight):
+    if "Ace" in dict and not is_straight:
+        return dict["Ace"]
+    elif "King" in dict:
+        return dict["King"]
+    elif "Queen" in dict:
+        return dict["Queen"]
+    elif "Jack" in dict:
+        return dict["Jack"]
+    elif "10" in dict:
+        return dict["10"]
+    elif "9" in dict:
+        return dict["9"]
+    elif "8" in dict:
+        return dict["8"]
+    elif "7" in dict:
+        return dict["7"]
+    elif "6" in dict:
+        return dict["6"]
+    elif "5" in dict:
+        return dict["5"]
+    elif "4" in dict:
+        return dict["4"]
+    elif "3" in dict:
+        return dict["3"]
+    elif "2" in dict:
+        return dict["2"]
+    elif "Ace" in dict:
+        return dict["Ace"]
+    else:
+        Exception("Highest Score Error")
+
 def score_combination(type: str) -> int:
     if type == "Royal Flush":
         return rank.ROYAL_FLUSH
@@ -173,7 +236,7 @@ def value_straight_flush(cards):
             if not is_card_in(Card(card.suit, needed_card), cards) or needed_card not in hash:
                 valid = False
         if valid:
-            value = card.suit
+            value = card.value
     return value
 
 def has_four_kind(cards):
@@ -332,26 +395,26 @@ def value_flush(cards):
     
     for card in cards:
         if card.value == "Jack":
-            int_card == 11
+            int_card = 11
         elif card.value == "Queen":
-            int_card == 12
+            int_card = 12
         elif card.value == "King":
-            int_card == 13
+            int_card = 13
         elif card.value == "Ace":
-            int_card == 14
+            int_card = 14
         else:
             int_card = int(card.value)
         if card.suit == suit[0] and int_card >= int(highest):
             highest = int_card
 
     if highest == 11:
-        highest == "Jack"
+        highest = "Jack"
     elif highest == 12:
-        highest == "Queen"
+        highest = "Queen"
     elif highest == 13:
-        highest == "King"
+        highest = "King"
     elif highest == 14:
-        highest == "Ace"
+        highest = "Ace"
     else:
         highest = str(highest)
     return highest

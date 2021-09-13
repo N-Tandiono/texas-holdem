@@ -1,5 +1,5 @@
 from card import Card
-from compare import convert_from_score, is_card_in, score_combination
+from compare import convert_from_score, is_card_in, score_combination, resolve_draw
 from deck import Deck
 from player.bot import Bot
 from player.human_player import HumanPlayer
@@ -212,7 +212,7 @@ class Game():
     def reset_roles(self) -> None:
         for player in self._table._players:
             player._role = ""
-        
+    
     def reveal(self):
         # Firstly get the highest combination
         # If there is a draw, check value representation
@@ -248,7 +248,7 @@ class Game():
                 player_highest_comb = results[i]
 
                 # Resolve Draws Here
-                
+                player_highest_comb = resolve_draw(player_highest_comb, player_highest_comb[0]._highest_combination)
 
             for player in player_highest_comb:
                 player._chips += player._round_bet
@@ -288,6 +288,10 @@ class Game():
             print(str(player_highest_comb[i]._name) , end=", ")
         print(str(player_highest_comb[len(player_highest_comb) - 1]._name) + " ]")
         print("Combination: " + str(player_highest_comb[len(player_highest_comb) - 1]._highest_combination))
+
+        # print(self._table._table_cards)
+        # print(self._table._players[0]._cards)
+        # print(self._table._players[1]._cards)
 
         # If player all-ins and loses, they should be dettached from table as they are no longer playing
         to_remove = []
