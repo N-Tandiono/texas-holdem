@@ -6,6 +6,8 @@ from player.human_player import HumanPlayer
 from player.player import Player
 from table import Table
 
+from logger import Logger
+
 # Import constants
 from constants import rank, action
 
@@ -15,7 +17,8 @@ class Game():
         self._table = Table()
         self.lead = None
         self._big_blind = 1 # Since there are always 2 players, second closest player left (index 1 in players table starts) 
-        self._small_blind = 0 # Since there are always 2 players, closest player left (index 0 in players table starts) 
+        self._small_blind = 0 # Since there are always 2 players, closest player left (index 0 in players table starts)
+        self._logger = Logger() 
 
     def template_play_game(self) -> None:
 
@@ -30,38 +33,39 @@ class Game():
 
     def template_play_round(self) -> None:
         
-        print("=== START ROUND ===")
+        self._logger.write("=== START ROUND ===")
         # Give all players in the table their first card
         self.give_players_card()
         
         # Give all players in the table their second card
         self.give_players_card()
         
-        print("FIRST ACTION")
+        self._logger.write("PRE-FLOP")
         # Request user actions
         self.request_actions()
 
+        self._logger.write("FLOP")
         # Place three cards on table for flop
         self.generate_flop()
 
-        print("SECOND ACTION")
         # Request user actions
         self.request_actions()
 
+        self._logger.write("TURN")
         # Place card on table for turn
         self.generate_turn()
         
-        print("THIRD ACTION")
         # Request user actions
         self.request_actions()
         
+        self._logger.write("RIVER")
         # Place card on table for river
         self.generate_river()
 
-        print("FOURTH ACTION")
         # Request user actions
         self.request_actions()
         
+        self._logger.write("REVEAL")
         # Check if round is finished and reveal (Folded Players)
         self.reveal()
 

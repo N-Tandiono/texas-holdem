@@ -1,4 +1,4 @@
-CHECK = ["check"]
+CHECK = ["check", "c"]
 CALL = ["call", "c"]
 RAISE = ["raise", "r"]
 FOLD = ["fold", "f"]
