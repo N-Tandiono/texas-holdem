@@ -5,12 +5,12 @@ from logger import Logger
 
 class Table():
 
-    def __init__(self, logger):
+    def __init__(self):
         self._players = []
         self._table_cards = [] * 5
         self.pot = 0
         self.round = 0
-        self._logger = logger
+        self._logger = Logger()
 
     def attach(self, observer: Player) -> None:
         self._players.append(observer)
