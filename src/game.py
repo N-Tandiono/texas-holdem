@@ -18,12 +18,13 @@ class Game():
         self.lead = None
         self._big_blind = 1 # Since there are always 2 players, second closest player left (index 1 in players table starts) 
         self._small_blind = 0 # Since there are always 2 players, closest player left (index 0 in players table starts)
-        self._logger = Logger() 
+        self._logger = Logger()
+        self._game = 0
 
     def template_play_game(self) -> None:
 
         # Create players which will be playing on table
-        self.generate_players()
+        self.generate_players(1000)
 
         # Game continues until there is one player left at the table
         while len(self._table._players) > 1:
@@ -33,48 +34,54 @@ class Game():
 
     def template_play_round(self) -> None:
         
-        self._logger.write("=== START ROUND ===")
+        self._logger.write(f"[Phase] Starting Round {self._game}")
         # Give all players in the table their first card
         self.give_players_card()
         
         # Give all players in the table their second card
         self.give_players_card()
-        
-        self._logger.write("PRE-FLOP")
+
+        self._logger.write("[Phase] Pre-Flop")
         # Request user actions
         self.request_actions()
 
-        self._logger.write("FLOP")
+        self._logger.write("[Phase] Flop")
         # Place three cards on table for flop
         self.generate_flop()
 
         # Request user actions
         self.request_actions()
 
-        self._logger.write("TURN")
+        self._logger.write("[Phase] Turn")
         # Place card on table for turn
         self.generate_turn()
         
         # Request user actions
         self.request_actions()
         
-        self._logger.write("RIVER")
+        self._logger.write("[Phase] River")
         # Place card on table for river
         self.generate_river()
 
         # Request user actions
         self.request_actions()
         
-        self._logger.write("REVEAL")
+        # Log Table Cards
+        self.log_table_cards()
+
+        # Log Player Cards
+        self.log_player_cards()
+
+        self._logger.write("[Phase] Reveal")
         # Check if round is finished and reveal (Folded Players)
         self.reveal()
 
+        self._logger.write(f"[Phase] End Round {self._game}")
         self.reset_round()
-        print("=== END ROUND ===")
 
-    def generate_players(self) -> None:
-        self._table.attach(HumanPlayer("Player 1", 1000))
-        self._table.attach(HumanPlayer("Player 2", 500))
+    def generate_players(self, starting_chips) -> None:
+        self._table.attach(HumanPlayer("Player 1", starting_chips))
+        self._table.attach(HumanPlayer("Player 2", starting_chips))
         
 
     def give_players_card(self) -> None:
@@ -144,30 +151,30 @@ class Game():
 
                 if player_move in action.RAISE:
                     # On raise, players continue until check or all-in 
-                    print("Raised")
+                    self._logger.write(f"[Info] Player {i} Raised")
                     self.lead = i - 1
                     if self.lead < 0:
                         self.lead = len(self._table._players) - 1
                     pass
                 elif player_move in action.CHECK:
                     # On Check, player does not choose to raise and no chips are taken
-                    print("Checked")
+                    self._logger.write(f"[Info] Player {i} Checked")
                     pass
                 elif player_move in action.CALL:
                     # On Call, player matches previous bet 
-                    print("Called")
+                    self._logger.write(f"[Info] Player {i} Called")
                     pass
                 elif player_move in action.FOLD:
                     # Player should be invalid from table and not eligible of winning
                     # Does not spend any more chips on that round
-                    print("Folded")
+                    self._logger.write(f"[Info] Player {i} Folded")
                     # Check other players, if there is only 1 left that hasn't folded, they win and round ends
                     pass
                 elif player_move in action.ALL_IN :
                     # Player goes all in, distribution of pot should be considered
                     # If a player cannot match a raise value, they should be all-in / fold
                     # If they already all-in the previous round, they skip turn
-                    print("All-in")
+                    self._logger.write(f"[Info] Player {i} is All-In")
                     pass
                 else:
                     raise Exception
@@ -197,7 +204,7 @@ class Game():
                         continue_play = True
 
                 if not continue_play:
-                    print("All Players are all-in")
+                    self._logger.write("[Info] All players are all-in")
                     break
             
             if i == self.lead:
@@ -291,6 +298,7 @@ class Game():
         for i in range(len(player_highest_comb) - 1):
             print(str(player_highest_comb[i]._name) , end=", ")
         print(str(player_highest_comb[len(player_highest_comb) - 1]._name) + " ]")
+        self.log_array("Winners", player_highest_comb)
         print("Combination: " + str(player_highest_comb[len(player_highest_comb) - 1]._highest_combination))
 
         # print(self._table._table_cards)
@@ -303,7 +311,7 @@ class Game():
             if player._chips <= 0:
                 to_remove.append(player)
         for player in to_remove:
-            print("Removing " + player._name + " from table.")
+            self._logger.write(f"Removing {player._name} from table.")
             self._table.detach(player)
         
         # Reset Round
@@ -321,6 +329,7 @@ class Game():
         self._table.pot = 0
         self._table.round = 0
         self.reset_roles()
+        self._game += 1
 
         # TODO: Clean up to functions
         self._big_blind += 1
@@ -338,6 +347,20 @@ class Game():
             self._small_blind += 1
             if self._small_blind >= len(self._table._players):
                 self._small_blind = 0
+        self._table.round += 1
+
+    def log_player_cards(self):
+        for player in self._table._players:
+            self._logger.write(f"[Info] {player._name} has {player._cards}")
+    
+    def log_table_cards(self):
+        self._logger.write(f"[Info] Table has {self._table._table_cards}")
+
+    def log_array(self, label, array):
+        self._logger.write(f"[Info] {label}: [ ", new_line=False)
+        for i in range(len(array) - 1):
+            self._logger.write(str(array[i]._name) + ", ", new_line=False)
+        self._logger.write(str(array[len(array) - 1]._name) + " ]")
 
 if __name__ == "__main__":
     game = Game()

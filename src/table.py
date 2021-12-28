@@ -1,12 +1,12 @@
 from card import Card
 from player.player import Player
-
 class Table():
 
-    _players = []
-    _table_cards = [] * 5
-    pot = 0
-    round = 0
+    def __init__(self):
+        self._players = []
+        self._table_cards = [] * 5
+        self.pot = 0
+        self.round = 0
 
     def attach(self, observer: Player) -> None:
         self._players.append(observer)

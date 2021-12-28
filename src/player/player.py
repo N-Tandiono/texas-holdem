@@ -43,7 +43,7 @@ class Player(ABC):
         table.pot += min(contribution + int(amount), self._chips)
         self._round_bet += min(contribution + int(amount), self._chips)
         self._chips -= min(contribution + int(amount), self._chips)
-
+        
         
     def move_call(self, table):
         contribution = 0

@@ -2,6 +2,11 @@ from itertools import permutations
 from card import Card
 from constants import rank
 
+# TODO: Fix case
+# [Info] Table has [8 Of Hearts, 8 Of Diamonds, 7 Of Hearts, 4 Of Hearts, Jack Of Hearts]
+# [Info] Player 1 has [9 Of Spades, 3 Of Clubs]
+# [Info] Player 2 has [5 Of Clubs, Queen Of Diamonds]
+
 def find_highest_combination(cards) -> str:
     # Card Rankings:
     # 1. Royal Flush
