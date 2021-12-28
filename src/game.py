@@ -14,12 +14,12 @@ from constants import rank, action
 class Game():
     def __init__(self):
         self._deck = Deck()
-        self._table = Table()
         self.lead = None
         self._big_blind = 1 # Since there are always 2 players, second closest player left (index 1 in players table starts) 
         self._small_blind = 0 # Since there are always 2 players, closest player left (index 0 in players table starts)
         self._logger = Logger()
-        self._game = 0
+        self._table = Table(self._logger)
+        self._game_round = 0
 
     def template_play_game(self) -> None:
 
@@ -34,7 +34,7 @@ class Game():
 
     def template_play_round(self) -> None:
         
-        self._logger.write(f"[Phase] Starting Round {self._game}")
+        self._logger.write(f"[Phase] Starting Round {self._game_round}")
         # Give all players in the table their first card
         self.give_players_card()
         
@@ -76,12 +76,13 @@ class Game():
         # Check if round is finished and reveal (Folded Players)
         self.reveal()
 
-        self._logger.write(f"[Phase] End Round {self._game}")
+        self._logger.write(f"[Phase] End Round {self._game_round}")
         self.reset_round()
 
     def generate_players(self, starting_chips) -> None:
         self._table.attach(HumanPlayer("Player 1", starting_chips))
         self._table.attach(HumanPlayer("Player 2", starting_chips))
+        self._table.attach(Bot("Player 3", starting_chips))
         
 
     def give_players_card(self) -> None:
@@ -311,7 +312,7 @@ class Game():
             if player._chips <= 0:
                 to_remove.append(player)
         for player in to_remove:
-            self._logger.write(f"Removing {player._name} from table.")
+            self._logger.write(f"[Info] Removing {player._name} from table.")
             self._table.detach(player)
         
         # Reset Round
@@ -329,7 +330,7 @@ class Game():
         self._table.pot = 0
         self._table.round = 0
         self.reset_roles()
-        self._game += 1
+        self._game_round += 1
 
         # TODO: Clean up to functions
         self._big_blind += 1

@@ -3,11 +3,20 @@ from strategy.bluff_strategy import BluffStrategy
 from strategy.strategy import Strategy
 from table import Table
 
+from logger import Logger
+
 class Bot(Player):
 
-    def __init__(self, name: str) -> None:
-        super().__init__(name)
-        self._confidence = 100
+    def __init__(self, name: str, starting_chips: int) -> None:
+        super().__init__(name, starting_chips)
+        # Similar concept to counterfactual regret minimization, adding regret
+        # Bot with higher regret has a higher chance to all-in on seemingly good hands and past history
+        # High level classified regret or chip raise, will use past hands
+        # Pre-flop - personal winrate percentage with knowledge on pair potential / flush and straight
+        # On Flop - see percent, chances of winning and regret rate to judge rest
+        # Turn - Does card help or not, how committed was the bot previously? Percent of it winning, position location
+        # River - Final move -> Should it check first and then raise, etc.
+        self._regret = 0
         self._strategy = BluffStrategy()
 
     def make_move(self, table: Table) -> str:
@@ -28,7 +37,7 @@ class Bot(Player):
         # Danger cards
         # Winning cards
 
-        decided_strategy = BluffStrategy()
+        decided_strategy = self.getStrategy(table)
 
         # Assign Strategy
         # Bluff / Slow Play / Push for Chips
@@ -54,7 +63,11 @@ class Bot(Player):
             raise Exception
 
         return move
-        
+
+    def getStrategy(self, table):
+        table._logger.write(f"[Phase] {self._name} getting strategy")
+
+        return BluffStrategy()
 
     @property
     def strategy(self) -> Strategy:

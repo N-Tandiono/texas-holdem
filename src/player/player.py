@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from card import Card
 from compare import find_highest_combination
 
+from logger import Logger
+
 class Player(ABC):
 
     def __init__(self, name: str, starting_chips: int):
