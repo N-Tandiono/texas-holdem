@@ -61,6 +61,10 @@ def test_straight_high():
     cards = [Card("Spades", "10"), Card("Diamonds", "Jack"), Card("Hearts", "Queen"), Card("Diamonds", "King"), Card("Diamonds", "Ace")]
     assert(compare.has_straight(cards))
 
+def test_straight_flush():
+    cards = [Card("Spades", "10"), Card("Spades", "Jack"), Card("Spades", "Queen"), Card("Spades", "King"), Card("Spades", "Ace")]
+    assert(compare.has_straight_flush(cards))
+
 def test_fail_straight_wrapped():
     cards = [Card("Spades", "King"), Card("Diamonds", "Ace"), Card("Hearts", "2"), Card("Diamonds", "3"), Card("Diamonds", "4")]
     assert(compare.has_straight(cards) == False)

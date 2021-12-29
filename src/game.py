@@ -317,8 +317,7 @@ class Game():
                 self._table._logger.write(f"[Info] Removing {player._name} from table.")
                 self._table.detach(player)
         
-        # Reset Round
-        results = {}
+        return results
 
     def reset_round(self):
         for player in self._table._players:
