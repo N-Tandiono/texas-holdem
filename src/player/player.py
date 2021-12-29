@@ -45,7 +45,7 @@ class Player(ABC):
         table.pot += min(contribution + int(amount), self._chips)
         self._round_bet += min(contribution + int(amount), self._chips)
         self._chips -= min(contribution + int(amount), self._chips)
-        
+        table._logger.write(f"[Move] {self._name} chose Raise")
         
     def move_call(self, table):
         contribution = 0
@@ -62,15 +62,18 @@ class Player(ABC):
         else:
             # If no, prompt all-in
             self.move_all_in(table)
-        
 
-    def move_fold(self):
+        table._logger.write(f"[Move] {self._name} chose Call")
+
+    def move_fold(self, table):
         self._is_valid_player = False
+        table._logger.write(f"[Move] {self._name} chose Fold")
     
     def move_all_in(self, table):
         table.pot += self._chips
         self._round_bet += self._chips
         self._chips -= self._chips
+        table._logger.write(f"[Move] {self._name} chose All-In")
 
     @abstractmethod
     def make_move(self, table) -> str:

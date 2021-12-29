@@ -48,7 +48,7 @@ class HumanPlayer(Player):
             self.move_call(table)
 
         elif move in action.FOLD:
-            self.move_fold()
+            self.move_fold(table)
 
         elif move in action.ALL_IN:
             self.move_all_in(table)

@@ -120,6 +120,8 @@ class Game():
             # Assign roles to new players
             self._table._players[self._big_blind]._role = "BB"
             self._table._players[self._small_blind]._role = "SB"
+            self._table._logger.write(f"[INFO] {self._table._players[self._big_blind]._name} is BB")
+            self._table._logger.write(f"[INFO] {self._table._players[self._small_blind]._name} is SB")
 
         self.lead = i - 1
         if self.lead < 0:
@@ -162,12 +164,12 @@ class Game():
                     pass
                 elif player_move in action.CALL:
                     # On Call, player matches previous bet 
-                    self._logger.write(f"[Info] Player {i} Called")
+                    self._table._logger.write(f"[Info] Player {i} Called")
                     pass
                 elif player_move in action.FOLD:
                     # Player should be invalid from table and not eligible of winning
                     # Does not spend any more chips on that round
-                    self._logger.write(f"[Info] Player {i} Folded")
+                    self._table._logger.write(f"[Info] Player {i} Folded")
                     # Check other players, if there is only 1 left that hasn't folded, they win and round ends
                     pass
                 elif player_move in action.ALL_IN :
@@ -274,45 +276,46 @@ class Game():
                 player._round_bet = 0
 
             if self._table.pot == 0:
-                print("Pot now Empty")
+                print("Pot Empty")
                 break
                         
         # Give money for reward winning
         # From pot, give to winner, divided amongst everyone
         # TODO: Fix up and find out a more accurate measurement especially for all-ins
         
+        if player_highest_comb: # If all players fold, nothing here to do
+            # Chips Owned
+            print("Chips:    [ ", end="")
+            for k in range(len(self._table._players) - 1):
+                print("(" + str(k + 1) + ") " + str(self._table._players[k]._role) + " " + str(self._table._players[k]._chips) , end=" | ")
+            print("(" + str(len(self._table._players)) + ") " + str(self._table._players[len(self._table._players) - 1]._role) + " " + str(self._table._players[len(self._table._players) - 1]._chips) + " ]")
 
-        # Chips Owned
-        print("Chips:    [ ", end="")
-        for k in range(len(self._table._players) - 1):
-            print("(" + str(k + 1) + ") " + str(self._table._players[k]._role) + " " + str(self._table._players[k]._chips) , end=" | ")
-        print("(" + str(len(self._table._players)) + ") " + str(self._table._players[len(self._table._players) - 1]._role) + " " + str(self._table._players[len(self._table._players) - 1]._chips) + " ]")
+            # Chips In Play
+            print("In Play:  [ ", end="")
+            for j in range(len(self._table._players) - 1):
+                print("(" + str(j + 1) + ") " + str(self._table._players[j]._role) + " " +str(self._table._players[j]._round_bet) , end=" | ")
+            print("(" + str(len(self._table._players)) + ") " + str(self._table._players[len(self._table._players) - 1]._role) + " " +str(self._table._players[len(self._table._players) - 1]._round_bet) + " ]")
 
-        # Chips In Play
-        print("In Play:  [ ", end="")
-        for j in range(len(self._table._players) - 1):
-            print("(" + str(j + 1) + ") " + str(self._table._players[j]._role) + " " +str(self._table._players[j]._round_bet) , end=" | ")
-        print("(" + str(len(self._table._players)) + ") " + str(self._table._players[len(self._table._players) - 1]._role) + " " +str(self._table._players[len(self._table._players) - 1]._round_bet) + " ]")
+            print("Winners:    [ ", end="")
+            for i in range(len(player_highest_comb) - 1):
+                print(str(player_highest_comb[i]._name) , end=", ")
+            print(str(player_highest_comb[len(player_highest_comb) - 1]._name) + " ]")
+            
+            self.log_array("Winners", player_highest_comb)
+            print("Combination: " + str(player_highest_comb[len(player_highest_comb) - 1]._highest_combination))
 
-        print("Winners:    [ ", end="")
-        for i in range(len(player_highest_comb) - 1):
-            print(str(player_highest_comb[i]._name) , end=", ")
-        print(str(player_highest_comb[len(player_highest_comb) - 1]._name) + " ]")
-        self.log_array("Winners", player_highest_comb)
-        print("Combination: " + str(player_highest_comb[len(player_highest_comb) - 1]._highest_combination))
+            # print(self._table._table_cards)
+            # print(self._table._players[0]._cards)
+            # print(self._table._players[1]._cards)
 
-        # print(self._table._table_cards)
-        # print(self._table._players[0]._cards)
-        # print(self._table._players[1]._cards)
-
-        # If player all-ins and loses, they should be dettached from table as they are no longer playing
-        to_remove = []
-        for player in self._table._players:
-            if player._chips <= 0:
-                to_remove.append(player)
-        for player in to_remove:
-            self._table._logger.write(f"[Info] Removing {player._name} from table.")
-            self._table.detach(player)
+            # If player all-ins and loses, they should be dettached from table as they are no longer playing
+            to_remove = []
+            for player in self._table._players:
+                if player._chips <= 0:
+                    to_remove.append(player)
+            for player in to_remove:
+                self._table._logger.write(f"[Info] Removing {player._name} from table.")
+                self._table.detach(player)
         
         # Reset Round
         results = {}
@@ -347,7 +350,6 @@ class Game():
             self._small_blind += 1
             if self._small_blind >= len(self._table._players):
                 self._small_blind = 0
-        self._table.round += 1
 
     def log_player_cards(self):
         for player in self._table._players:
@@ -359,7 +361,7 @@ class Game():
     def log_array(self, label, array):
         self._table._logger.write(f"[Info] {label}: [ ", new_line=False)
         for i in range(len(array) - 1):
-            self._logger.write(str(array[i]._name) + ", ", new_line=False)
+            self._table._logger.write(str(array[i]._name) + ", ", new_line=False)
         self._table._logger.write(str(array[len(array) - 1]._name) + " ]")
 
 if __name__ == "__main__":
