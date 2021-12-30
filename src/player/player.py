@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from card import Card
-from compare import find_highest_combination
+from compare import find_highest_combination, find_top_cards
 
 from logger import Logger
 
@@ -16,14 +16,21 @@ class Player(ABC):
         self._is_valid_player = True
         value, combination = find_highest_combination(self._cards)
 
+        # Old Method
         self._highest_combination = combination
         self.value = value
+
+        # New Method
+        self.top_cards = []
+        self.top_combs = []
 
     def update(self, table) -> None:
         # Called on addition of a card to the table.
         # Recalculate odds and highest_combination
         value, combination = find_highest_combination(self._cards + table._table_cards)
         
+        self.top_cards, self.top_combs = find_top_cards(self._cards + table._table_cards)
+
         self._highest_combination = combination
         self.value = value
 

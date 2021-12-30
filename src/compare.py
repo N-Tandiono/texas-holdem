@@ -733,3 +733,8 @@ def is_card_in(card, array):
         if is_equal(card, c):
             return True
     return False
+
+def find_top_cards(cards):
+    top = []
+    ranks = []
+    return top, ranks
